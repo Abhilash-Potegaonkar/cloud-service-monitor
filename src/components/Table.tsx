@@ -30,7 +30,7 @@ const Table = ({ columns, data, onRowClick }: TableProps) => {
     const [selectedRow, setSelectedRow] = useState<RowData | null>(null);
 
     const handleMenuOpen = (event: MouseEvent<HTMLElement>, row: RowData) => {
-        event.stopPropagation(); // prevent row click
+        event.stopPropagation();
         setAnchorEl(event.currentTarget);
         setSelectedRow(row);
     };
@@ -52,7 +52,6 @@ const Table = ({ columns, data, onRowClick }: TableProps) => {
     );
 
     const renderCell = (col: Column, value: string) => {
-        // Normalize value
         const val = value.toLowerCase();
 
         if (col.id === "severity") {
@@ -105,7 +104,7 @@ const Table = ({ columns, data, onRowClick }: TableProps) => {
                     (key) =>
                         !columns.some((col) => col.id === key) &&
                         key !== "id" &&
-                        !hiddenFields.includes(key) // 👈 hide here
+                        !hiddenFields.includes(key)
                 )
                 .map((key) => ({
                     id: key,
