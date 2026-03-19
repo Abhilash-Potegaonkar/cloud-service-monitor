@@ -10,36 +10,38 @@ type Props = {
 
 const SiteHeader = ({ onRefresh, autoRefresh, setAutoRefresh }: Props) => {
     return (
-        <header className="sticky top-0 z-40 w-full border-b bg-blue-700 dark:bg-blue-900 text-white shadow-sm">
-            <div className="px-4 flex h-16 items-center justify-between">
-                <div className="flex items-center gap-2 text-lg font-semibold tracking-wide">
+        <header className="sticky top-0 z-40 w-full border-b bg-blue-700 text-white shadow-sm">
+            <div className="px-4 py-3 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+                <div className="flex items-center gap-2 text-base sm:text-lg font-semibold tracking-wide">
                     <CloudIcon fontSize="medium" />
                     <span>Cloud Service Monitor</span>
                 </div>
-                <div className="flex items-center gap-4">
+                <div className="flex flex-wrap items-center gap-2 sm:gap-4">
                     <FormControlLabel
                         control={
                             <Switch
                                 checked={autoRefresh}
-                                onChange={(e) => setAutoRefresh && setAutoRefresh(e.target.checked)}
-                                color="default"
+                                onChange={(e) =>
+                                    setAutoRefresh && setAutoRefresh(e.target.checked)
+                                }
+                                size="small"
                             />
                         }
-                        label="Auto Refresh"
-                        className="text-white"
+                        label="Auto"
+                        className="text-white m-0"
                     />
                     <Button
                         variant="contained"
                         size="small"
-                        startIcon={<RefreshIcon className={"text-black"}/>}
+                        startIcon={<RefreshIcon />}
                         onClick={onRefresh}
                         sx={{
                             backgroundColor: "#eceff1",
                             "&:hover": { backgroundColor: "#eceff1" },
                             color: "black",
-
+                            minWidth: "auto",
+                            padding: "4px 10px",
                         }}
-                        className={"text-black"}
                     >
                         Refresh
                     </Button>

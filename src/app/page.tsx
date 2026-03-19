@@ -12,6 +12,7 @@ import { RowData } from "@/types";
 import SidePanel from "@/components/SidePanel";
 import Filters from "@/components/Filters";
 import {fetchServices, ServiceRowData} from "@/lib/mockApiForServiceTab";
+import EmptyState from "@/components/EmptyState";
 
 export default function Dashboard() {
     const [activeTab, setActiveTab] = useState<string>("services");
@@ -53,12 +54,20 @@ export default function Dashboard() {
                         setSeverity={setSeverity}
                         setStatus={setStatus}
                     />
-
-                    <Table
-                        columns={dashboardConfig.tables.incidents.columns}
-                        data={filteredIncidents}
-                        onRowClick={(row) => setSelectedRow(row)}
-                    />
+                    {filteredIncidents.length === 0 ? (
+                        <EmptyState
+                            onClear={() => {
+                                setSeverity("");
+                                setStatus("");
+                            }}
+                        />
+                    ) : (
+                        <Table
+                            columns={dashboardConfig.tables.incidents.columns}
+                            data={filteredIncidents}
+                            onRowClick={(row) => setSelectedRow(row)}
+                        />
+                    )}
 
                     <SidePanel
                         open={!!selectedRow}
@@ -70,7 +79,7 @@ export default function Dashboard() {
             {activeTab === "services" && (
                 <>
                     <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 mt-4">
-                        {serviceData.map((item) => (
+                        {serviceData.length>0 && serviceData.map((item) => (
                             <ServiceCard key={item.id} data={item} />
                         ))}
                     </div>

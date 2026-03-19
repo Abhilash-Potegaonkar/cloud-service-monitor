@@ -9,7 +9,7 @@ import SiteHeader from "@/components/SiteHeader";
 const inter = Source_Sans_3({ subsets: ["latin"] });
 export const metadata: Metadata = {
     title: "Cloud Dashboard",
-    description: "Cloud Live Dashboard",
+    description: "Live Cloud Dashboard",
     icons: {
         icon: "/getProductLogo.json",
     },
