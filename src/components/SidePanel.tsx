@@ -10,13 +10,20 @@ import {
 import CloseIcon from "@mui/icons-material/Close";
 import InfoIcon from "@mui/icons-material/Info";
 import { RowData } from "@/types";
+import { useRef, useState} from "react";
 
 type Props = {
     open: boolean;
     onClose: () => void;
     data: RowData | null;
 };
+type SaveState = "idle" | "typing" | "saving" | "saved";
 
+const updateNotes = async (notes: string) => {
+    return new Promise((resolve) => {
+        setTimeout(() => resolve(notes), 1000);
+    });
+};
 export default function SidePanel({ open, onClose, data }: Props) {
     const getSeverityColor = (val: string) => {
         const v = val.toLowerCase();
@@ -32,12 +39,56 @@ export default function SidePanel({ open, onClose, data }: Props) {
         if (v === "resolved") return "success";
         return "default";
     };
+    const [saveState, setSaveState] = useState<SaveState>("idle");
 
+    const debounceTimer = useRef<NodeJS.Timeout | null>(null);
+    const currentRequestId = useRef(0);
+    const lastSavedValue = useRef("");
+    const latestNotesRef = useRef("");
+
+    const handleNotesChange = (value: string) => {
+        latestNotesRef.current = value;
+        setSaveState("typing");
+
+        if (debounceTimer.current) {
+            clearTimeout(debounceTimer.current);
+        }
+
+        debounceTimer.current = setTimeout(() => {
+            triggerSave(value);
+        }, 2000);
+    };
+
+    const triggerSave = async (value: string) => {
+        const requestId = ++currentRequestId.current;
+
+        setSaveState("saving");
+
+        try {
+            await updateNotes(value);
+
+            if (requestId !== currentRequestId.current) return;
+
+            lastSavedValue.current = value;
+
+            if (value !== latestNotesRef.current) {
+                setSaveState("typing");
+            } else {
+                setSaveState("saved");
+
+                setTimeout(() => {
+                    if (latestNotesRef.current === lastSavedValue.current) {
+                        setSaveState("idle");
+                    }
+                }, 1500);
+            }
+        } catch (e) {
+            console.error(e);
+        }
+    };
     return (
         <Drawer anchor="right" open={open} onClose={onClose}>
             <div className="w-[360px] h-full flex flex-col bg-white">
-
-                {/* Header */}
                 <div className="flex items-center justify-between px-4 py-3 border-b dark:border-gray-700">
                     <div className="flex items-center gap-2">
                         <InfoIcon className="text-blue-500" />
@@ -53,7 +104,6 @@ export default function SidePanel({ open, onClose, data }: Props) {
                 <div className="p-4 space-y-4 overflow-y-auto flex-1">
                     {data ? (
                         <>
-                            {/* Title */}
                             <div>
                                 <Typography className="text-gray-500 text-xs uppercase">
                                     Title
@@ -99,6 +149,43 @@ export default function SidePanel({ open, onClose, data }: Props) {
                         <Typography>No data</Typography>
                     )}
                 </div>
+                <Divider />
+
+
+            </div>
+            <div className="space-y-2">
+                <Typography className="text-gray-500 text-xs uppercase">
+                    Notes
+                </Typography>
+
+                <textarea
+                    key={data?.id}
+                    defaultValue={data?.notes || ""}
+                    onChange={(e) => handleNotesChange(e.target.value)}
+                    placeholder="Add notes..."
+                    className="w-80 border rounded p-2 m-2 text-sm"
+                    rows={4}
+                />
+
+
+                {saveState === "typing" && (
+                    <Typography className="text-xs text-gray-500">
+                        Unsaved changes
+                    </Typography>
+                )}
+
+                {saveState === "saving" && (
+                    <div className="flex items-center gap-2 text-blue-500 text-xs">
+                        <span className="animate-spin">⏳</span>
+                        Saving...
+                    </div>
+                )}
+
+                {saveState === "saved" && (
+                    <Typography className="text-xs text-green-600">
+                        ✓ Saved
+                    </Typography>
+                )}
             </div>
         </Drawer>
     );
