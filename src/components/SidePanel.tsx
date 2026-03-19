@@ -5,7 +5,7 @@ import {
     Typography,
     Divider,
     Chip,
-    IconButton
+    IconButton, TextField
 } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 import InfoIcon from "@mui/icons-material/Info";
@@ -25,6 +25,7 @@ const updateNotes = async (notes: string) => {
     });
 };
 export default function SidePanel({ open, onClose, data }: Props) {
+    const [notes, setNotes] = useState(data?.notes || "");
     const getSeverityColor = (val: string) => {
         const v = val.toLowerCase();
         if (v === "high") return "error";
@@ -89,7 +90,7 @@ export default function SidePanel({ open, onClose, data }: Props) {
     return (
         <Drawer anchor="right" open={open} onClose={onClose}>
             <div className="w-[360px] h-full flex flex-col bg-white">
-                <div className="flex items-center justify-between px-4 py-3 border-b dark:border-gray-700">
+                <div className="flex items-center justify-between px-4 py-3 border-b">
                     <div className="flex items-center gap-2">
                         <InfoIcon className="text-blue-500" />
                         <Typography variant="h6" className="font-semibold">
@@ -101,7 +102,7 @@ export default function SidePanel({ open, onClose, data }: Props) {
                         <CloseIcon />
                     </IconButton>
                 </div>
-                <div className="p-4 space-y-4 overflow-y-auto flex-1">
+                <div className="p-4 space-y-4 overflow-y-auto h-[65vh]">
                     {data ? (
                         <>
                             <div>
@@ -112,6 +113,7 @@ export default function SidePanel({ open, onClose, data }: Props) {
                                     {data.title}
                                 </Typography>
                             </div>
+
                             <div className="flex gap-2">
                                 <Chip
                                     label={data.severity}
@@ -127,10 +129,9 @@ export default function SidePanel({ open, onClose, data }: Props) {
 
                             <Divider />
 
-
                             <div className="space-y-3">
                                 {Object.entries(data).map(([key, value]) => {
-                                    if (key === "title" || key === "severity" || key === "status") return null;
+                                    if (["title", "severity", "status", "notes"].includes(key)) return null;
 
                                     return (
                                         <div key={key} className="bg-gray-50 p-2 rounded">
@@ -149,43 +150,45 @@ export default function SidePanel({ open, onClose, data }: Props) {
                         <Typography>No data</Typography>
                     )}
                 </div>
-                <Divider />
-
-
-            </div>
-            <div className="space-y-2">
-                <Typography className="text-gray-500 text-xs uppercase">
-                    Notes
-                </Typography>
-
-                <textarea
-                    key={data?.id}
-                    defaultValue={data?.notes || ""}
-                    onChange={(e) => handleNotesChange(e.target.value)}
-                    placeholder="Add notes..."
-                    className="w-80 border rounded p-2 m-2 text-sm"
-                    rows={4}
-                />
-
-
-                {saveState === "typing" && (
-                    <Typography className="text-xs text-gray-500">
-                        Unsaved changes
+                <div className="border-t p-4 space-y-2 bg-white">
+                    <Typography className="text-gray-500 text-xs uppercase">
+                        Notes
                     </Typography>
-                )}
 
-                {saveState === "saving" && (
-                    <div className="flex items-center gap-2 text-blue-500 text-xs">
-                        <span className="animate-spin">⏳</span>
-                        Saving...
-                    </div>
-                )}
+                    <TextField
+                        value={notes}
+                        onChange={(e) => {
+                            setNotes(e.target.value);
+                            handleNotesChange(e.target.value);
+                        }}
+                        placeholder="Add notes..."
+                        multiline
+                        minRows={4}
+                        fullWidth
+                        variant="outlined"
+                        size="small"
+                    />
 
-                {saveState === "saved" && (
-                    <Typography className="text-xs text-green-600">
-                        ✓ Saved
-                    </Typography>
-                )}
+
+                    {saveState === "typing" && (
+                        <Typography className="text-xs text-gray-500">
+                            Unsaved changes
+                        </Typography>
+                    )}
+
+                    {saveState === "saving" && (
+                        <div className="flex items-center gap-2 text-blue-500 text-xs">
+                            <span className="animate-spin">⏳</span>
+                            Saving...
+                        </div>
+                    )}
+
+                    {saveState === "saved" && (
+                        <Typography className="text-xs text-green-600">
+                            ✓ Saved
+                        </Typography>
+                    )}
+                </div>
             </div>
         </Drawer>
     );
