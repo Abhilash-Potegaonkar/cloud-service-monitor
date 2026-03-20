@@ -8,11 +8,7 @@ type Props = {
     onClear?: () => void;
 };
 
-export default function EmptyState({
-                                       title = "No incidents found",
-                                       description = "There are currently no incidents to display",
-                                       onClear,
-                                   }: Props) {
+export default function EmptyState({title = "No incidents found", description = "There are currently no incidents to display", onClear,}: Props) {
     return (
         <div className="flex flex-col items-center justify-center py-24 text-center">
 

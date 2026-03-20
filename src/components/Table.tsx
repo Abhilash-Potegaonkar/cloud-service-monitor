@@ -24,6 +24,7 @@ type TableProps = {
 };
 
 const Table = ({ columns, data, onRowClick }: TableProps) => {
+    //Incidents table
     const [page, setPage] = useState(0);
     const rowsPerPage = 10;
     const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);

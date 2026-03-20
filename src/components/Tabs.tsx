@@ -7,11 +7,7 @@ type TabType = {
     label: string;
 };
 
-const Tabs = ({
-                  tabs,
-                  activeTab,
-                  setActiveTab
-              }: {
+const Tabs = ({tabs, activeTab, setActiveTab}: {
     tabs: TabType[];
     activeTab: string;
     setActiveTab: (id: string) => void;

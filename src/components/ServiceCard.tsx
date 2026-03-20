@@ -52,11 +52,11 @@ export default function ServiceCard({ data }: { data: ServiceRowData }) {
             sx={{
                 height: "25vh",
                 borderRadius: 3,
-                boxShadow: 3,
+                boxShadow: 2,
                 transition: "0.3s",
                 "&:hover": {
-                    boxShadow: 6,
-                    transform: "translateY(-4px)",
+                    boxShadow: 3,
+                    // transform: "translateY(-4px)",
                 },
             }}
         >

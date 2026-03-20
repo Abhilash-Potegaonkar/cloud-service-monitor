@@ -9,6 +9,7 @@ type RowData = {
     created: string;
     updated: string;
     description: string;
+   //todo add column type here to render dynamically in table
 };
 export const fetchIncidents = async (): Promise<RowData[]> => {
     return [
@@ -22,7 +23,8 @@ export const fetchIncidents = async (): Promise<RowData[]> => {
             assignedTo: "John Doe",
             created: "2026-03-01 10:00",
             updated: "2026-03-01 10:30",
-            description: "Primary server is not responding."
+            description: "Primary server is not responding.",
+           //todo add new added key value in api here to direct dynamically render in table
         },
         {
             id: "2",
