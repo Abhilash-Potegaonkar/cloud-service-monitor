@@ -32,7 +32,7 @@ const SiteHeader = ({ onRefresh, autoRefresh, setAutoRefresh }: Props) => {
     };
     return (
         //todo navbar
-        <header className="sticky top-0 z-40 w-full border-b bg-blue-700 text-white shadow-sm">
+        <header className="sticky top-0 z-40 w-full border-b bg-[#095899] text-white shadow-sm">
             <div className="px-4 py-3 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
                 <div className="flex items-center gap-2 text-base sm:text-lg font-semibold tracking-wide">
                     <CloudIcon fontSize="medium" />
