@@ -50,7 +50,6 @@ export default function ServiceCard({ data }: { data: ServiceRowData }) {
     return (
         <Card
             sx={{
-                height: "25vh",
                 borderRadius: 3,
                 boxShadow: 2,
                 transition: "0.3s",
@@ -59,6 +58,7 @@ export default function ServiceCard({ data }: { data: ServiceRowData }) {
                     // transform: "translateY(-4px)",
                 },
             }}
+            className="h-[25vh] xl:h-[33vh] 2xl:h-[28vh] lg:h-[40vh] md:h-[55vh] sm:h-[30vh]"
         >
             <CardContent>
                 <Box display="flex" justifyContent="space-between" alignItems="center">

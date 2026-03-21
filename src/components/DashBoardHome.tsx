@@ -16,11 +16,12 @@ import {
 import EmptyState from "@/components/EmptyState";
 import { getCurrentUserRole } from "@/lib/auth";
 import { rolePermissions } from "@/config/roles";
+import ServiceCardSkeleton from "./ServiceCardSkeleton";
 export const DashBoardHome = () => {
     const [activeTab, setActiveTab] = useState<"services" | "incidents">(
         "services"
     );
-
+const [loadingServices, setLoadingServices] = useState(true);
     const [incidentData, setIncidentData] = useState<RowData[]>([]);
     const [serviceData, setServiceData] = useState<ServiceRowData[]>([]);
     const [selectedRow, setSelectedRow] = useState<RowData | null>(null);
@@ -47,19 +48,25 @@ export const DashBoardHome = () => {
         setActiveTab(tab as "services" | "incidents");
     };
 
-    useEffect(() => {
-        const loadData = async () => {
-            if (safeActiveTab === "incidents") {
-                const res = await fetchIncidents();
-                setIncidentData(res);
-            } else {
-                const res = await fetchServices();
-                setServiceData(res);
-            }
-        };
+   useEffect(() => {
+    const loadData = async () => {
+        if (safeActiveTab === "incidents") {
+            const res = await fetchIncidents();
+            setIncidentData(res);
+        } else {
+            setLoadingServices(true);
 
-        loadData();
-    }, [safeActiveTab]);
+            const res = await fetchServices();
+
+            setTimeout(() => {
+                setServiceData(res);
+                setLoadingServices(false);
+            }, 2000);
+        }
+    };
+
+    loadData();
+}, [safeActiveTab]);
 
     const filteredIncidents = incidentData.filter((item) => {
         const matchSeverity = severity ? item.severity === severity : true;
@@ -129,9 +136,15 @@ export const DashBoardHome = () => {
             )}
             {safeActiveTab === "services" && permissions.canViewServices && (
                 <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 mt-4">
-                    {serviceData.map((item) => (
-                        <ServiceCard key={item.id} data={item} />
-                    ))}
+                   {loadingServices ? (
+              Array.from({ length: 6 }).map((_, i) => (
+              <ServiceCardSkeleton key={i} />
+                              ))
+) : (
+    serviceData.map((item) => (
+        <ServiceCard key={item.id} data={item} />
+    ))
+)}
                 </div>
             )}
         </div>
